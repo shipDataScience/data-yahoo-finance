@@ -2,13 +2,24 @@ YAHOO Finance Data Grabber
 ==============
 
 An example data plugin for Ship Data Science.
-This plugin grabs the daily closing stock quote for Google, Apple, and Microsoft since April 2014.
-It's an example of how to create a custom data plugin.
-To use, simply add the following code to your model's .shipit.json.
+This plugin grabs the daily closing stock quote for an arbitrary list of stocks 
+using the Yahoo Finance API. 
+
+Check out the demo model we've set up using this data source: [Tech Stocks Demo Model](https://github.com/shipDataScience/model-tech-stocks)
+
+To use, simply add config like the following code to your model's .shipit.json.
+All settings inside the 'config' namespace are optional with sensible defaults.
+If endDate is left unset, the data will be pulled until the present day.
 
 ```
 "data" : {
-  "cloneUrl" : "git@github.com:shipDataScience/data-yahoo-finance.git"
+  "cloneUrl" : "git@github.com:shipDataScience/data-yahoo-finance.git",
+  "config" : {
+    "tickers" : ["AAPL", "GOOG", "MSFT"], 
+    "lags" : [1,3,5],
+    "startDate" : "2014-04-01",
+    "endDate" : "2014-04-02"
+  }
 }
 ```
 

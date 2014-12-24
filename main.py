@@ -4,24 +4,50 @@ import csv
 import json
 import collections
 import os
+import pandas
 
-today_string = datetime.date.today().strftime( "%Y-%m-%d")
 config_string = os.environ["SDS_PLUGIN_CONFIG_JSON"]
 config = json.loads(config_string)
 outfile = config['reserved']['outFilePath']
 
-tickers = ["GOOG", "AAPL", "MSFT"]
-data = collections.defaultdict(dict)
+if config.get('tickers'):
+  tickers = config['tickers']
+else:
+  tickers = ['GOOG', 'AAPL', 'MSFT']
 
+if config.get('lags'):
+  lags = config['lags']
+else:
+  lags = [1,3,5]
+
+if config.get("startDate"):
+  start_date = config["startDate"]
+else:
+  start_date = '2014-04-01'
+
+if config.get("endDate"):
+  end_date = config["endDate"]
+else:
+  end_date = datetime.date.today().strftime( "%Y-%m-%d")
+
+data = pandas.DataFrame()
+
+# Raw Data
 for ticker in tickers:
-  resp = ystockquote.get_historical_prices(ticker, '2014-04-01', today_string ) 
+  resp = ystockquote.get_historical_prices(ticker, start_date, end_date ) 
+  series = pandas.Series()
   for day, info in resp.items():
-    data[day][ticker] = info['Close']
+    series = series.set_value(day, info['Close'])
+  data[ticker] = series
 
-with open(outfile, 'wb') as csvfile:
-  writer = csv.writer(csvfile, delimiter='\t')
-  writer.writerow(["Date"] + [ ticker for ticker in tickers ] )
-  for day in sorted(data.keys()):
-    writer.writerow( [day] + [data[day].get(ticker) for ticker in tickers ] )
+data.index.names = ['Date']
+data.sort_index(inplace=True)
+
+# Lagged data
+for ticker in tickers:
+  for lag in lags:
+    data[ticker + "_LAG_" + str(lag)] = data[ticker].shift(lag)
+
+data.to_csv(outfile, sep="\t")
 
 
