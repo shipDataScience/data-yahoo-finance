@@ -5,6 +5,7 @@ import json
 import collections
 import os
 import pandas
+import time
 
 config_string = os.environ["SDS_PLUGIN_CONFIG_JSON"]
 config = json.loads(config_string)
@@ -13,7 +14,7 @@ outfile = config['reserved']['outFilePath']
 if config.get('tickers'):
   tickers = config['tickers']
 else:
-  tickers = ['GOOG', 'AAPL', 'MSFT']
+  tickers = ['GOOG', 'QQQ', 'DBC']
 
 if config.get('lags'):
   lags = config['lags']
@@ -34,6 +35,7 @@ data = pandas.DataFrame()
 
 # Raw Data
 for ticker in tickers:
+  time.sleep(3)
   resp = ystockquote.get_historical_prices(ticker, start_date, end_date ) 
   series = pandas.Series()
   for day, info in resp.items():
