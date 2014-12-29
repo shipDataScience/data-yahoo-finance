@@ -23,12 +23,6 @@ RUN wget http://python-distribute.org/distribute_setup.py; python distribute_set
 # pip
 RUN wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py; python get-pip.py; rm -f /get-pip.py
 
-# python-PIL
-RUN apt-get install -y python-imaging libpng-dev libfreetype6 libfreetype6-dev
-
-# pyzmq
-RUN apt-get install -y libzmq-dev
-
 ONBUILD RUN pip install -r requirements.txt
 
 CMD [ "python", "main.py" ]
