@@ -29,12 +29,7 @@ RUN apt-get install -y python-imaging libpng-dev libfreetype6 libfreetype6-dev
 # pyzmq
 RUN apt-get install -y libzmq-dev
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-ONBUILD COPY requirements.txt /usr/src/app/
 ONBUILD RUN pip install -r requirements.txt
-
 
 CMD [ "python", "main.py" ]
 
