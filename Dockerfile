@@ -1,6 +1,16 @@
-FROM python:2-onbuild
+FROM python:2.7.9
 
-RUN pip2.7 install -r requirements.txt
+# hardwire some packages for caching purposes (fast repeated builds)
 
-CMD [ "python2.7", "main.py" ]
+RUN pip install numpy
+RUN pip install scipy
+RUN pip install pandas
+
+RUN mkdir -p /usr/src/app
+COPY . /usr/src/app
+
+WORKDIR /usr/src/app
+RUN pip install -r requirements.txt
+
+CMD [ "python", "main.py" ]
 
