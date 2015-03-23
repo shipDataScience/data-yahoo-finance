@@ -9,7 +9,7 @@ import time
 
 config_string = os.environ["SDS_PLUGIN_CONFIG_JSON"]
 config = json.loads(config_string)
-outfile = config['reserved']['outFilePath']
+outfile = os.environ["SDS_OUTPUT_PATH"]
 
 if config.get('tickers'):
   tickers = config['tickers']
