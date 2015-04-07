@@ -1,4 +1,4 @@
-YAHOO Finance Data Grabber
+YAHOO Finance Connect Module
 ==============
 
 An example data plugin for Ship Data Science.
@@ -8,12 +8,18 @@ using the Yahoo Finance API.
 Check out the demo model we've set up using this data source: [Tech Stocks Demo Model](https://github.com/shipDataScience/model-tech-stocks)
 
 To use, simply add config like the following code to your model's .shipit.json.
+You can automatically fill out the config at the [Ship Data Science Cofigurator](http://configurator.shipdatascience.com).
+
 All settings inside the 'config' namespace are optional with sensible defaults.
 If endDate is left unset, the data will be pulled until the present day.
 
 ```
 "data" : {
-  "cloneUrl" : "git@github.com:shipDataScience/data-yahoo-finance.git",
+  "module": {
+    "repositoryOwner": "shipDataScience",
+    "repositoryName": "data-yahoo-finance",
+    "repositoryBranch": "master"
+  },
   "config" : {
     "tickers" : ["AAPL", "GOOG", "MSFT"], 
     "lags" : [1,3,5],
@@ -25,15 +31,26 @@ If endDate is left unset, the data will be pulled until the present day.
 
 FAQ
 --------
-Here is what happens to your data when you run a build:
 
- - A fresh virtual machine is spun up on AWS. This VM is only used for this build and deleted on termination.
- - Your model is cloned to the box using your Github oauth token.
- - This data plugin's environment is built using the Dockerfile.
- - This data plugin's docker container is started and the script writes your data to a mounted volume (a segregated file directory on your VM).
- - The docker container image is deleted and the data plugin is done.
- - Each monitoring plugin container you have selected is run sequentially and given access to the data directory.
- - The plugin results are sent to our server and the VM is terminated.
+Be aware this plugin runs unauthenticated requests against Yahoo's Finance API and
+is subject to rate limits and continuing support of the API by Yahoo.
   
+Security Note
+----------
+
+Be aware that this configuration information will appear in the .shipit.json file if you use this module. 
+You should ensure that your project repository on Github is set to private access only. 
+
+
+License
+-----------
+Copyright (c) 2015 Ship Data Science LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 
